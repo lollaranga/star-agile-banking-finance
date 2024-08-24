@@ -1,53 +1,42 @@
-pipeline {
+pipeline{
     agent any
-    
-    tools {
-        maven 'Maven 3.8.1' // This should match the name of the Maven installation in Jenkins
-    }
-    
-    stages {
-        stage('Checkout') {
-            steps {
-                // Checkout the code from the Git repository
-                git branch: 'main', url: 'https://github.com/lollaranga/star-agile-banking-finance.git'
+    stages{
+        stage('checkout the code from github'){
+            steps{
+                 git url: 'https://github.com/lollaranga/Banking-java-project/'
+                 echo 'github url checkout'
             }
         }
-        
-        stage('Build') {
-            steps {
-                // Build the project using Maven
-                sh './mvnw clean install'
+        stage('codecompile with akshat'){
+            steps{
+                echo 'starting compiling'
+                sh 'mvn compile'
             }
         }
-        
-        stage('Test') {
-            steps {
-                // Run tests using Maven
-                sh './mvnw test'
+        stage('codetesting with akshat'){
+            steps{
+                sh 'mvn test'
             }
         }
-        
-        stage('Package') {
-            steps {
-                // Package the application
-                sh './mvnw package'
+        stage('qa with akshat'){
+            steps{
+                sh 'mvn checkstyle:checkstyle'
             }
         }
-        
-        stage('Deploy') {
-            steps {
-                // Deploy steps (if any). Add your deployment logic here.
-                echo 'Deploying the application...'
+        stage('package with akshat'){
+            steps{
+                sh 'mvn package'
             }
         }
-    }
-    
-    post {
-        success {
-            echo 'Pipeline succeeded!'
-        }
-        failure {
-            echo 'Pipeline failed!'
-        }
+        stage('run dockerfile'){
+          steps{
+               sh 'docker build -t myimg .'
+           }
+         }
+        stage('port expose'){
+            steps{
+                sh 'docker run -dt -p 8091:8091 --name c000 myimg'
+            }
+        }   
     }
 }
