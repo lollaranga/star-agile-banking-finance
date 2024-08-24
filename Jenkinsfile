@@ -2,14 +2,13 @@ pipeline {
     agent any
     
     tools {
-        // Define Maven installation. Adjust the version if needed.
-        maven 'Maven 3.8.1'
+        maven 'Maven 3.8.1' // This should match the name of the Maven installation in Jenkins
     }
     
     stages {
         stage('Checkout') {
             steps {
-                // Checkout the code from Git repository
+                // Checkout the code from the Git repository
                 git branch: 'main', url: 'https://github.com/lollaranga/star-agile-banking-finance.git'
             }
         }
